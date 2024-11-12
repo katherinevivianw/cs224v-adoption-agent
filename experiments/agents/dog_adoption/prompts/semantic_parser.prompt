@@ -1,35 +1,34 @@
 <|startofinstruction|>
-You are a semantic parser. Your goal is to write python code statements using the given APIs and Databases. Plan your response first, then write the code.
+Your goal is to write python code statements using the given APIs and Databases based on the user utterance. Plan your response first, then generate the User Target.
 
 Today's date is {{ date }} and the day is {{ day }}.
 
 These are the APIs available to you:
 {{ apis }}
-- answer(query: str)
+answer(query: str)
 
-The answer function can answer questions about:
-- courses
-- ratings
-- offerings
-- programs
+The `answer` function can answer questions using the following database:
+{{ dbs }}
+
+You should NEVER create a new variable on your own. 
+For example: `answer = answer("Where can I adopt a Dalmation in Palo Alto")` is not allowed. 
+You should directly write `answer("Where can I adopt a Dalmation in Palo Alto")`.
 
 You will be given:
-- The state of the conversation.
-- The agent's action.
+- The state of the conversation, if present.
+- The agent's action, if present.
 - The last turn of the conversation.
 
 Follow these guidelines:
-- To update any field of the APIs, you can use the following syntax: `api_name.field_name = value`
-- When the user is asking a questions, use the following syntax: `answer(query:str)`.
-- Fill the fields of the APIs with the information provided by the user. Do not asssume any value, you can leave it empty.
-- To fill `course_name` in `Course` API, always search for course using `answer` API.
-- Update the state if the user is updating information. Othewise create a another instance of an API, don't copy values from the state. Always use the new information.
+- Set the `user_task` field of the `UserInfo` API to 'Adoption Search' when the user wants to search for a shelter.
+- When refering to an adoption listing, provide its `id` in the `answer` query.
+- Use the `confirm()` function to confirm the user's restaurant choice when Agent Action has `AskForFieldConfirmation()`.
+- You should update fields by using `api_name.field_name = value` if the user is update an API instance already present in the state.
+- If the user refuses to confirm, set the field to `False`.
 - If the user is chit-chatting, greeting or thanking, then just write: # Chit-chat, greeting or thanking.
-- Do not create lists of multiple answer instances. Write them in separate lines if the user is asking multiple questions.
-- Never assign `Main` to a variable directly. Always update the `main` instance in the state.
 
 Here are some examples:
-Example: Without any state or agent action.
+Example: Without state being present.
 State:
 ```
 None
@@ -40,148 +39,28 @@ None
 ```
 
 Last-turn Conversation:
-Agent: Hello! I'm the Course Enrollment Assistant. I can help you with :
-- Selecting a course: just say find me programming courses
-- Enrolling into a course. 
-- Asking me any question related to courses and their requirement criteria.
-
-How can I help you today?
-User: Hi there! I am Steven Zhou, an international student.
+Agent: Hello! I'm DogAdoptionBot. I'm here to help you find adoption listings for a specified dog breed in your area. What would you like to do?
+User: I want to search for golden retrievers available for adoption in New York City.
 
 User Target:
 ```
-Main(student_info_details=StudentInfo(student_name="Steven Zhou", is_international_student=True))
+UserInfo(user_task='Adoption Search')
+AdoptionSearch(shelter=answer("looking for golden retrievers available for adoption in New York City"))
 --
-Example: To update any field of the APIs, you can use the following syntax: `api_name.field_name = value`
+Example: Whenever searching for adoptions, make sure to set user_task to 'Adoption Search'.
 State:
 ```
-course = Course(course_name = 'CS 231')
-courses_to_take = CoursesToTake(course_0_details = course)
-main = Main(courses_to_take = courses_to_take)
-
+restaurant = [Restaurant(address = "369 California Ave, Palo Alto, CA 94306", cuisines = ['filipino'], location = "Palo Alto", name = "The Lumpia Company", num_reviews = 2, opening_hours = ['open from 1100 to 0000 on Monday', 'open from 1100 to 0000 on Tuesday', 'open from 1100 to 0000 on Wednesday', 'open from 1100 to 0000 on Thursday', 'open from 1100 to 0000 on Friday', 'open from 1100 to 0000 on Saturday', 'open from 1100 to 0000 on Sunday'], phone_number = "(415) 992-8206", popular_dishes = [], price = "", rating = 3.0, summary = "The person received their order but found that the food was not crispy enough and was instead soggy.")]
+answer = answer(query="find me a restaurant in Palo Alto")
+answer.result = [restaurant[0]]
 ```
 Agent Action:
 ```
 [
-  "AskField(course, grade_type, The desired grading bases of the student Options are: Credit/No Credit, Letter)"
+    "ReportAgent(answer.query, answer.result)",
+    "ProposeWorksheet(AdoptionSearch, {"shelter": shelter[0]})"
 ]
-```
-
-Last-turn Conversation:
-Agent: What is the desired grading basis for CS 231? Your options are: Credit/No Credit, Letter.
-User: I will take the letter grade.
-
-User Target:
-```
-course.grade_type = 'Letter'
-```
 --
-Example: To get the answer to a question, you can use the following syntax: `answer("Your question here")`. Always do what the user says.
-State:
-```
-main = Main(courses_to_take = courses_to_take)
-answer = answer("What courses are required for logic automata complexity?")
-answer.result = "CS 103"
-courses_to_take = CoursesToTake()
-course = Course()
-```
-Agent Action:
-```
-[
-    Report(answer, answer.result)
-    AskField(course, course_name, "What is the name of the course?")
-]
-```
-
-Last-turn Conversation:
-Agent: The course required for logic automata complexity is CS 103. Do you want to enroll in this course?
-User: Are there any prerequisites for this course?
-
-User Target:
-```
-answer("What are the prerequisites for the course CS 103?")
-```
---
-Example: Write functional code when you are creating new instances of the APIs. Do not use this for updating the existing ones in the state.
-State:
-```
-main = Main()
-answer = answer('What are the ratings for the Artificial Intelligence: Principles and Techniques (CS 221) course?')
-answer.result = [('Artificial Intelligence: Principles and Techniques', Decimal('4.16'))]
-
-```
-Agent Action:
-```
-[
-  "Report(answer, answer.result)",
-  "AskField(main, courses_to_take, The courses that the student wants to take)"
-]
-```
-
-Last-turn Conversation:
-Agent: The course "Artificial Intelligence: Principles and Techniques" (CS 221) has a rating of 4.16. Which courses are you interested in enrolling in?
-User: I will take cs 221
-
-User Target:
-```
-main.courses_to_take = CoursesToTake(course_0_details=Course(course_name='CS 221'))
-```
---
-Example: When creating a new instance of any API, don't copy values from the existing API in the state. Always use the new information.
-State:
-```
-course = Course(course_name = 'cs 231', grade_type = 'Letter', course_num_units = 4)
-courses_to_take = CoursesToTake(course_0_details = course)
-main = Main(courses_to_take = courses_to_take)
-answer = answer('What is the rating for the Introduction to Computer Graphics and Imaging (CS 148) course?')
-answer.result = [{'title': 'Introduction to Computer Graphics and Imaging', 'average_rating': 4.1}, {'title': 'Introduction to Computer Graphics and Imaging', 'average_rating': 4.2}, {'title': 'Introduction to Computer Graphics and Imaging', 'average_rating': 4.0}]
-
-```
-Agent Action:
-```
-[
-  "Report(answer, answer.result)",
-  "AskField(courses_to_take, course_1_details, The course details for second course)"
-]
-```
-
-Last-turn Conversation:
-Agent: The ratings for the Introduction to Computer Graphics and Imaging (CS 148) course are as follows:
-
-- 4.1
-- 4.2
-- 4.0
-
-What are the course details for the second course you'd like to take?
-User: yeah i will take this one
-
-User Target:
-```
-courses_to_take.course_1_details = Course(course_name='CS 148')
-```
---
-Example: For a new API instance, create a complete API call.
-State:
-```
-course = Course(course_name = 'CS 224C', grade_type = 'Letter', course_num_units = 4)
-courses_to_take = CoursesToTake(course_0_details = course)
-main = Main(courses_to_take = courses_to_take)
-```
-Agent Action:
-```
-[
-  "AskField(Course(course_name: str, grade_type: Enum['Credit/No Credit', 'Letter'], course_num_units: int), course_name, Name of the course that the student wants to take)"
-]
-```
-
-Last-turn Conversation:
-Agent: Could you please provide the name of the course that you want to take?
-User: CS 224N letter grade 3 units
-
-User Target:
-```
-CoursesToTake(course_1_deatils = Course(course_name = 'CS 224N', grade_type = 'Letter', course_num_units = 3))
-```
 <|endofinstruction|>
 
 <|startofinput|>

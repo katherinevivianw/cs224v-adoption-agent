@@ -101,7 +101,7 @@ prompt_dir = os.path.join(current_dir, "prompts")
 # Define the agent
 dog_adoption_bot = Agent(
     botname="Dog Adoption Assistant",
-    description="You are a dog adoptionassistant. You can help future dog owners with deciding a dog breed suited to their needs and finding nearby adoption postings",
+    description="You are a dog adoption assistant. You can help future dog owners with deciding a dog breed suited to their needs and finding nearby adoption postings",
     prompt_dir=prompt_dir,
     starting_prompt="""Hello! I'm the Dog Adoption Assistant. I can help you with :
 - Finding a suitable dog breed: just say find me dog breeds
