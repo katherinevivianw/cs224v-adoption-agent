@@ -3,6 +3,7 @@ import os
 import random
 from uuid import uuid4
 import requests
+import json
 
 from suql.agent import postprocess_suql
 
@@ -27,6 +28,7 @@ class AdoptionSearch:
         url = f"{self.base_url}search_form"
         params = {
             'v': self.api_version,
+            'key': self.key,
             'output': self.output_format,
             'species': self.species
         }
@@ -36,19 +38,28 @@ class AdoptionSearch:
 
         response = requests.get(url, params=params, headers=headers)
         if response.status_code == 200:
-            return response.json()
+            response_json = response.json()
+            return json.loads(response_json)
         else:
             response.raise_for_status()
     
-    def get_breed_id(breed_str):
-        pass
+    def get_breed_id(self, breed_str):
+        search_form = self.get_search_form()
+        breed_id_dict = search_form['breed_id']
+
+        for breed in breed_id_dict:
+            if breed["label"] == breed_str:
+                return breed["value"]
+
+        return '-1'
     
     def get_adoption_listings(self, city_or_zip, geo_range, breed_str="", sex="", age=""):
         """
         Searches for pets based on provided criteria and returns a list of pets.
         """
         url = f"{self.base_url}pet_search"
-        breed_id = get_breed_id(breed_str)
+        breed_id = self.get_breed_id(breed_str)
+        
         params = {
             'v': self.api_version,
             'key': self.key,
@@ -98,7 +109,6 @@ class AdoptionSearch:
 adoption_search_client = AdoptionSearch()
 
 # Define path to the prompts
-
 current_dir = os.path.dirname(os.path.realpath(__file__))
 prompt_dir = os.path.join(current_dir, "prompts")
 
