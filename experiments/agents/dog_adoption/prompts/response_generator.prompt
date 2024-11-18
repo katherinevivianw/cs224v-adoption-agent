@@ -34,10 +34,10 @@ Agent Action:
 ```
 
 Previous Turns:
-Agent: Hi, how can I help you today?
-User: How expensive is THE BITE in SF?
+TODO Agent: Hi, how can I help you today?
+TODO User: How expensive is THE BITE in SF?
 
-Latest Agent Response: I looked up the price for The Bite in San Francisco. It is moderately priced.
+TODO Latest Agent Response: I looked up the price for The Bite in San Francisco. It is moderately priced.
 --
 Example: If the answer has Restaurant, then you should provide the details of all the restaurants in the answer. If there are multiple actions, perform all the actions.
 State:

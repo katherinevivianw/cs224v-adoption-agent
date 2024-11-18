@@ -49,15 +49,15 @@ AdoptionSearch(adoption_search_params=answer("looking for female malteses availa
 Example: Whenever searching for adoptions, make sure to set user_task to 'Adoption Search'.
 State:
 ```
-listings = [AdoptionListing(pet_id = "28112543", pet_name = "Deken", age = "adult", sex = "m", size = "Med. 26-60 lbs (12-27 kg)", primary_breed = "Golden Retriever", location = "New York, NY")]
-answer = answer(query="search for golden retrievers available for adoption in New York City in a 50 mile radius.")
-answer.result = [listings[0]]
+adoption_listings = [AdoptionListing(pet_id = "28112543", pet_name = "Deken", age = "adult", sex = "m", size = "Med. 26-60 lbs (12-27 kg)", primary_breed = "Golden Retriever", location = "New York, NY")]
+adoption_search = AdoptionSearch(params instead of natural language...)
+adoption_search.result = [adoption_listings[0]]
 ```
 Agent Action:
 ```
 [
-    "ReportAgent(answer.query, answer.result)",
-    "ProposeWorksheet(AdoptionSearch, {"listings": listings[0]})"
+    "ReportAgent(adoption_search.query, adoption_search.result)",
+    "ProposeWorksheet(AdoptionSearch, {"adoption_listings": adoption_listings[0]})"
 ]
 --
 <|endofinstruction|>
