@@ -17,7 +17,7 @@ class AdoptionSearch:
     def __init__(self):
         self.base_url = 'https://api-staging.adoptapet.com/search/'
         self.key = 'hg4nsv85lppeoqqixy3tnlt3k8lj6o0c'
-        self.api_version = '2'
+        self.api_version = '3'
         self.output_format = 'json'
         self.species = 'dog'
 
@@ -45,7 +45,7 @@ class AdoptionSearch:
     
     def get_breed_id(self, breed_str):
         search_form = self.get_search_form()
-        breed_id_dict = search_form['breed_id']
+        breed_id_dict = search_form["breed_id"]
 
         for breed in breed_id_dict:
             if breed["label"] == breed_str:
@@ -53,23 +53,23 @@ class AdoptionSearch:
 
         return '-1'
     
-    def get_adoption_listings(self, city_or_zip, geo_range, breed_str="", sex="", age=""):
+    def get_adoption_listings(self, adoption_search_params):
         """
         Searches for pets based on provided criteria and returns a list of pets.
         """
         url = f"{self.base_url}pet_search"
-        breed_id = self.get_breed_id(breed_str)
+        breed_id = self.get_breed_id(adoption_search_params.value.breed.value)
         
         params = {
             'v': self.api_version,
             'key': self.key,
             'output': self.output_format,
-            'city_or_zip': city_or_zip,
-            'geo_range': geo_range,
+            'city_or_zip': adoption_search_params.value.city_or_zip.value,
+            'geo_range': adoption_search_params.value.geo_range.value,
             'species': self.species,
             'breed_id': breed_id,
-            'sex': sex,
-            'age': age,
+            'sex': adoption_search_params.value.sex.value,
+            'age': adoption_search_params.value.age.value,
         }
         headers = {
             'Accept': 'application/json; charset=UTF8'
@@ -81,12 +81,12 @@ class AdoptionSearch:
         else:
             response.raise_for_status()
     
-    def format_adoption_listings(self, city_or_zip, geo_range, breed_id="", sex="", age=""):
+    def get_processed_adoption_listings(self, adoption_search_params):
         """
         Processes the JSON API response into a list of dictionaries.
         """
         processed_adoption_listings = []
-        dogs = self.get_adoption_listings(city_or_zip, geo_range, breed_id, sex, age)
+        dogs = self.get_adoption_listings(adoption_search_params)
         
         for dog in dogs:
             pet_info = {
@@ -149,7 +149,7 @@ dog_adoption_bot = Agent(
 How can I help you today? 
 """,
     args={},
-    api=[adoption_search_client.get_adoption_listings, adoption_search_client.get_pet_details],
+    api=[adoption_search_client.get_processed_adoption_listings],
     knowledge_base=suql_knowledge,
     knowledge_parser=suql_react_parser,
 ).load_from_gsheet(

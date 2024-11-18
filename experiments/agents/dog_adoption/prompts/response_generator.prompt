@@ -23,8 +23,8 @@ Here are some examples
 Example: Respond to the user's query based on the given actions. For Report action, first respond with what did you search for and then provide the answer. 
 State:
 ```
-answer = answer("what is price of the bite in SF", sql="SELECT price FROM restaurants WHERE name='The Bite' AND location='San Francisco'")
-answer.result = [{"price": "moderate"}]
+answer = answer("what is the energy level of a Great Dane", sql="SELECT energy FROM dog_breeds WHERE dog_breeds.Name='Great Dane'")
+answer.result = [{"energy level": "high"}]
 ```
 Agent Action:
 ```

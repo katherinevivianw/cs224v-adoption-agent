@@ -11,8 +11,8 @@ The `answer` function can answer questions using the following database:
 {{ dbs }}
 
 You should NEVER create a new variable on your own. 
-For example: `answer = answer("Where can I adopt a Dalmation in Palo Alto")` is not allowed. 
-You should directly write `answer("Where can I adopt a Dalmation in Palo Alto")`.
+For example: `answer = answer("Where can I adopt a Dalmatian in Palo Alto")` is not allowed. 
+You should directly write `answer("Where can I adopt a Dalmatian in Palo Alto")`.
 
 You will be given:
 - The state of the conversation, if present.
@@ -21,8 +21,7 @@ You will be given:
 
 Follow these guidelines:
 - Set the `user_task` field of the `UserInfo` API to 'Adoption Search' when the user wants to search for a shelter.
-- When refering to an adoption listing, provide its `id` in the `answer` query.
-- Use the `confirm()` function to confirm the user's restaurant choice when Agent Action has `AskForFieldConfirmation()`.
+- When refering to an adoption listing, provide its `pet_id` in the `answer` query.
 - You should update fields by using `api_name.field_name = value` if the user is update an API instance already present in the state.
 - If the user refuses to confirm, set the field to `False`.
 - If the user is chit-chatting, greeting or thanking, then just write: # Chit-chat, greeting or thanking.
@@ -40,25 +39,25 @@ None
 
 Last-turn Conversation:
 Agent: Hello! I'm DogAdoptionBot. I'm here to help you find adoption listings for a specified dog breed in your area. What would you like to do?
-User: I want to search for golden retrievers available for adoption in New York City.
+User: I want to search for a female maltese in a 100 mile radius of my zip code 92602
 
 User Target:
 ```
 UserInfo(user_task='Adoption Search')
-AdoptionSearch(shelter=answer("looking for golden retrievers available for adoption in New York City"))
+AdoptionSearch(adoption_search_params=answer("looking for female malteses available for adoption in 92602 in a 100 mile radius"))
 --
 Example: Whenever searching for adoptions, make sure to set user_task to 'Adoption Search'.
 State:
 ```
-restaurant = [Restaurant(address = "369 California Ave, Palo Alto, CA 94306", cuisines = ['filipino'], location = "Palo Alto", name = "The Lumpia Company", num_reviews = 2, opening_hours = ['open from 1100 to 0000 on Monday', 'open from 1100 to 0000 on Tuesday', 'open from 1100 to 0000 on Wednesday', 'open from 1100 to 0000 on Thursday', 'open from 1100 to 0000 on Friday', 'open from 1100 to 0000 on Saturday', 'open from 1100 to 0000 on Sunday'], phone_number = "(415) 992-8206", popular_dishes = [], price = "", rating = 3.0, summary = "The person received their order but found that the food was not crispy enough and was instead soggy.")]
-answer = answer(query="find me a restaurant in Palo Alto")
-answer.result = [restaurant[0]]
+listings = [AdoptionListing(pet_id = "28112543", pet_name = "Deken", age = "adult", sex = "m", size = "Med. 26-60 lbs (12-27 kg)", primary_breed = "Golden Retriever", location = "New York, NY")]
+answer = answer(query="search for golden retrievers available for adoption in New York City in a 50 mile radius.")
+answer.result = [listings[0]]
 ```
 Agent Action:
 ```
 [
     "ReportAgent(answer.query, answer.result)",
-    "ProposeWorksheet(AdoptionSearch, {"shelter": shelter[0]})"
+    "ProposeWorksheet(AdoptionSearch, {"listings": listings[0]})"
 ]
 --
 <|endofinstruction|>
