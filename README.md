@@ -45,6 +45,16 @@ uv sync
 Example agents are present in `experiments/agents/` directory. You can use them
 as a reference to create your own agents.
 
+### Load the model configuration
+
+```python
+from yaml import safe_load
+
+
+with open("model_config.yaml", "r") as f:
+    model_config = safe_load(f)
+```
+
 ### Define your Knowledge Sources
 
 ```python
@@ -62,6 +72,8 @@ suql_knowledge = SUQLKnowledgeBase(
             current_dir, "course_assistant_general_info.txt"
         ) # mapping of free-text files with the path
     },
+    db_host="127.0.0.1", # database host
+    db_port="5432", # database port
     postprocessing_fn=postprocess_suql,  # optional postprocessing function
     result_postprocessing_fn=None,  # optional result postprocessing function
 )
@@ -75,7 +87,7 @@ suql_knowledge = SUQLKnowledgeBase(
 from worksheets.knowledge import SUQLReActParser
 
 suql_react_parser = SUQLReActParser(
-    llm_model_name="gpt-4o",  # model name
+    llm_model_name="azure/gpt-4o",  # model name
     example_path=os.path.join(current_dir, "examples.txt"),  # path to examples
     instruction_path=os.path.join(current_dir, "instructions.txt"),  # path to domain-specific instructions
     table_schema_path=os.path.join(current_dir, "table_schema.txt"),  # path to table schema
@@ -89,7 +101,7 @@ suql_react_parser = SUQLReActParser(
 from worksheets.knowledge import SUQLParser
 
 suql_parser = SUQLParser(
-    llm_model_name="gpt-4o",
+    llm_model_name="azure/gpt-4o",
     prompt_selector=None,  # optional function that helps in selecting the right prompt
     knowledge=suql_knowledge,
 ),
@@ -146,7 +158,7 @@ You should save the service_account key as `service_account.json` in the `worksh
 
 Here is a starter worksheet that you can use for your reference: [Starter Worksheet](https://docs.google.com/spreadsheets/d/1ST1ixBogjEEzEhMeb-kVyf-JxGRMjtlRR6z4G2sjyb4/edit?usp=sharing)
 
-Here is a sample spreadsheet for a restaurant agent: [Restaurant Agent](https://docs.google.com/spreadsheets/d/1ejyFlZUrUZiBmFP3dLcVNcKqzAAfw292-LmyHXSFsTE/edit#gid=699205925)
+Here is a sample spreadsheet for a restaurant agent: [Restaurant Agent](https://docs.google.com/spreadsheets/d/1FXg5VFrdxQlUyld3QmKKL9BN1lLIhAtQTJjCHyNOU_Y/edit?usp=sharing)
 
 Please note that we only use the specification defined in the first sheet of the spreadsheet.
 
@@ -165,10 +177,21 @@ chainlit run app_restaurant.py --port 8800
 ```
 
 ## Set LLM Config
+To use Azure OpenAI you need to set the following environment variables:
 ```
 export AZURE_OPENAI_WS_KEY="<AZURE OPENAI WS KEY>"
 export AZURE_WS_ENDPOINT="<AZURE WS ENDPOINT>"
 export AZURE_WS_API_VERSION="<AZURE WS API VERSION>"
+```
+
+To use OpenAI you need to set the following environment variables:
+```
+export OPENAI_API_KEY="<OPENAI API KEY>"
+```
+
+To use Together AI you need to set the following environment variables:
+```
+export TOGETHER_API_KEY="<TOGETHER AI API KEY>"
 ```
 
 ## Cite our work
