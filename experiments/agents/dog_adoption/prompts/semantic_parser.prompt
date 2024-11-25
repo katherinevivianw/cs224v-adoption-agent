@@ -44,13 +44,13 @@ User: I want to search for a female maltese in a 100 mile radius of my zip code 
 User Target:
 ```
 UserInfo(user_task='Adoption Search')
-AdoptionSearch(adoption_search_params=answer("looking for female malteses available for adoption in 92602 in a 100 mile radius"))
+AdoptionSearch(city_or_zip="92602", breed_str="Maltese", geo_range="100", sex="f")
 --
 Example: Whenever searching for adoptions, make sure to set user_task to 'Adoption Search'.
 State:
 ```
 adoption_listings = [AdoptionListing(pet_id = "28112543", pet_name = "Deken", age = "adult", sex = "m", size = "Med. 26-60 lbs (12-27 kg)", primary_breed = "Golden Retriever", location = "New York, NY")]
-adoption_search = AdoptionSearch(params instead of natural language...)
+adoption_search = AdoptionSearch(city_or_zip="New York, NY", breed_str="Golden Retriever", geo_range="100", sex="m", age="adult")
 adoption_search.result = [adoption_listings[0]]
 ```
 Agent Action:

@@ -42,8 +42,7 @@ class AdoptionSearch:
 
         response = requests.get(url, params=params, headers=headers)
         if response.status_code == 200:
-            response_json = response.json()
-            return json.loads(response_json)
+            return response.json()
         else:
             response.raise_for_status()
     
@@ -57,23 +56,23 @@ class AdoptionSearch:
 
         return '-1'
     
-    def get_adoption_listings(self, adoption_search_params):
+    def get_adoption_listings(self, city_or_zip, breed_str="", geo_range="50", sex="", age=""):
         """
         Searches for pets based on provided criteria and returns a list of pets.
         """
         url = f"{self.base_url}pet_search"
-        breed_id = self.get_breed_id(adoption_search_params.value.breed.value)
+        breed_id = self.get_breed_id(breed_str)
         
         params = {
             'v': self.api_version,
             'key': self.key,
             'output': self.output_format,
-            'city_or_zip': adoption_search_params.value.city_or_zip.value,
-            'geo_range': adoption_search_params.value.geo_range.value,
+            'city_or_zip': city_or_zip,
+            'geo_range': geo_range,
             'species': self.species,
             'breed_id': breed_id,
-            'sex': adoption_search_params.value.sex.value,
-            'age': adoption_search_params.value.age.value,
+            'sex': sex,
+            'age': age,
         }
         headers = {
             'Accept': 'application/json; charset=UTF8'
@@ -81,16 +80,16 @@ class AdoptionSearch:
 
         response = requests.get(url, params=params, headers=headers)
         if response.status_code == 200:
-            return response.json()
+            return response.json()["pets"]
         else:
             response.raise_for_status()
     
-    def get_processed_adoption_listings(self, adoption_search_params):
+    def get_processed_adoption_listings(self, city_or_zip, breed_str="", geo_range="50", sex="", age=""):
         """
         Processes the JSON API response into a list of dictionaries.
         """
         processed_adoption_listings = []
-        dogs = self.get_adoption_listings(adoption_search_params)
+        dogs = self.get_adoption_listings(city_or_zip, breed_str, geo_range, sex, age)
         
         for dog in dogs:
             pet_info = {
@@ -100,11 +99,9 @@ class AdoptionSearch:
                 "sex": dog.get("sex"),
                 "size": dog.get("size"),
                 "primary_breed": dog.get("primary_breed"),
-                #"secondary_breed": dog.get("secondary_breed"),
+                "secondary_breed": dog.get("secondary_breed"),
                 "location": f"{dog.get('addr_city', '')}, {dog.get('addr_state_code', '')}",
-                #"details_url": dog.get("details_url"),
-                #"photo_url": dog.get("results_photo_url"),
-                #"large_photo_url": dog.get("large_results_photo_url"),
+                "large_results_photo_url": dog.get("large_results_photo_url"),
             }
             processed_adoption_listings.append(pet_info)
 

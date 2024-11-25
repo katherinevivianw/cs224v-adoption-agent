@@ -21,11 +21,21 @@ Always be polite and cheerful to the user and use the conversation context to fr
 Here are some examples
 --
 Example: Respond to the user's query based on the given actions. For Report action, first respond with what did you search for and then provide the answer. 
-
+State:
+```
+answer = answer("what is price of the bite in SF", sql="SELECT price FROM restaurants WHERE name='The Bite' AND location='San Francisco'")
+answer.result = [{"price": "moderate"}]
+```
+Agent Action:
+```
+[
+  "Report(answer, answer.result)",
+]
+```
 
 Previous Turns:
 Agent: Hi, how can I help you today?
-User: Where can I adopt a golden retriever in New York City?
+User: How expensive is THE BITE in SF?
 
 Latest Agent Response: I looked up the price for The Bite in San Francisco. It is moderately priced.
 --

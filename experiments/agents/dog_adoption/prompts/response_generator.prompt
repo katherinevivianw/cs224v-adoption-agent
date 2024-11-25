@@ -34,37 +34,37 @@ Agent Action:
 ```
 
 Previous Turns:
-TODO Agent: Hi, how can I help you today?
-TODO User: How expensive is THE BITE in SF?
+Agent: Hi, how can I help you today?
+User: What is the energy level of a Great Dane dog?
 
-TODO Latest Agent Response: I looked up the price for The Bite in San Francisco. It is moderately priced.
+Latest Agent Response: I looked up the energy level of a Great Dane. Great Danes have a [INSERT ENERGY LEVEL] energy level.
 --
-Example: If the answer has Restaurant, then you should provide the details of all the restaurants in the answer. If there are multiple actions, perform all the actions.
+Example: If the answer has AdoptionListing, then you should provide the details of all the adopting listings in the answer. If there are multiple actions, perform all the actions.
 State:
 ```
-answer = answer("looking for a restaurant in Palo Alto", sql="SELECT * FROM restaurants WHERE location='Palo Alto'")
-restaurant = [
-  Restaurant(address = "369 California Ave, Palo Alto, CA 94306", cuisines = ['filipino'], location = "Palo Alto", name = "The Lumpia Company", num_reviews = 2, opening_hours = ['open from 1100 to 0000 on Monday', 'open from 1100 to 0000 on Tuesday', 'open from 1100 to 0000 on Wednesday', 'open from 1100 to 0000 on Thursday', 'open from 1100 to 0000 on Friday', 'open from 1100 to 0000 on Saturday', 'open from 1100 to 0000 on Sunday'], phone_number = "(415) 992-8206", popular_dishes = [], price = "", rating = 3.0, summary = ""),
-  Restaurant(id = 'q22kIfCuND7shr9vkOmwnQ', name = 'Fang', cuisines = ['chinese', 'asian fusion'], price = 'moderate', rating = 3.5, num_reviews = 1823, popular_dishes = ['Famous Nanking Sesame Chicken', ], phone_number = '(415) 777-8568', location = '660 University Ave, Palo Alto', opening_hours = ['open from 1100 to 1400 on Monday', 'open from 1730 to 2030 on Monday', 'open from 1100 to 1400 on Tuesday', 'open from 1730 to 2030 on Tuesday', 'open from 1100 to 1400 on Wednesday', 'open from 1730 to 2030 on Wednesday', 'open from 1100 to 1400 on Thursday', 'open from 1730 to 2030 on Thursday', 'open from 1100 to 1400 on Friday', 'open from 1730 to 2030 on Friday', 'open from 1100 to 1400 on Saturday', 'open from 1730 to 2030 on Saturday', 'open from 1100 to 1400 on Sunday', 'open from 1730 to 2030 on Sunday'])", 'Restaurant(id = '59v5gU6MG3FrZ0Z7RYXEkg', name = 'Henry's Hunan Restaurant', cuisines = ['chinese'], price = 'moderate', rating = 3.5, num_reviews = 491, popular_dishes = ["Diana's Special-meat Pie", 'Kung Pao Chicken', 'Dumplings', 'Hot & Sour Soup', 'Onion Cake', 'Curry Chicken', 'Hunan Smoked Ham', 'Mongolian Beef', 'Hot & Sour Chicken', 'Chicken Salad', 'Harvest Pork', 'Garlic Chicken', 'Hunan Velvet Chicken', 'Kung Pao Tofu', 'Steamed Rice', 'Chicken Chow Mein', 'Kung Pao Beef', 'Egg Rolls'], phone_number = '(415) 546-4999', location = '110 Natoma St, San Francisco, CA 94105', opening_hours = ['open from 1100 to 1500 on Monday', 'open from 1730 to 2100 on Monday', 'open from 1100 to 1500 on Tuesday', 'open from 1730 to 2100 on Tuesday', 'open from 1100 to 1500 on Wednesday', 'open from 1730 to 2100 on Wednesday', 'open from 1100 to 1500 on Thursday', 'open from 1730 to 2100 on Thursday', 'open from 1100 to 1500 on Sunday', 'open from 1730 to 2100 on Sunday'])'
+adoption_search = AdoptionSearch(city_or_zip="Palo Alto, CA", breed_str="Shih Tzu", geo_range="50")
+adoption_listing = [
+  AdoptionListing(pet_id="27390669", pet_name="Cody", age="adult", sex="m", size="Small 25 lbs (11 kg) or less", primary_breed="Shih Tzu", secondary_breed="Pug", location="Palo Alto, CA", large_results_photo_url="https://pet-uploads-staging.adoptapet.com/f/c/6/457495572.jpg"),
+  AdoptionListing(pet_id="28109870", pet_name="Molly", age="senior", sex="f", size="Small 25 lbs (11 kg) or less", primary_breed="Shih Tzu", location="Palo Alto, CA", large_results_photo_url="https://pet-uploads-staging.adoptapet.com/c/f/5/475175353.jpg")'
 ]
-answer.result = [restaurant[0], restaurant[1]]
+adoption_search.result = [adoption_listing[0], adoption_listing[1]]
 ```
 Agent Action:
 ```
 [
-  "Report(answer.query, answer.result)",
-  'ProposeWorksheet(BookRestaurant, {"restaurant": restaurant[0]})',
-  'ProposeWorksheet(BookRestaurant, {"restaurant": restaurant[1]})',
+  "Report(adoption_search.query, adoption_search.result)",
+  'ProposeWorksheet(GetAdoptionListingDetails, {"adoption_listing": adoption_listing[0]})',
+  'ProposeWorksheet(GetAdoptionListingDetails, {"adoption_listing": adoption_listing[1]})',
 ]
 ```
 
 Previous Turns:
-Agent: Hello! I'm YelpBot. I'm here to help you book a restaurant. What would you like to do?
-User: I am looking for a restaurant in Palo Alto.
+Agent: Hello! I'm DogAdoptionBot. I'm here to help you find adoption listings for a specified dog breed in your area. What would you like to do?
+User: I am looking for a Shih Tzu in Palo Alto.
 
-Latest Agent Response: I looked up some restaurants in Palo Alto. I have found:
-- **Lumpia Company**, a Filipino restaurant located at 369 California Ave, Palo Alto, CA 94306. It has a rating of 3.0 based on 2 reviews. 
-- **Fang**, a Chinese and Asian Fusion restaurant located at 660 University Ave, Palo Alto. It has a rating of 3.5 based on 1823 reviews. Which one would you like to book?
+Latest Agent Response: I looked up some Shih Tzus available for adoption in Palo Alto. I have found:
+- **Cody**, a male adult Shih Tzu and Pug mix, located in Palo Alto, CA. He is a small dog (25 lbs/11 kg or less). Here's a link to a photo: https://pet-uploads-staging.adoptapet.com/f/c/6/457495572.jpg!
+- **Molly**, a senior female Shih Tzu located in Palo Alto, CA. She's a small dog (25 lbs/11 kg or less). Here's a link to a photo: https://pet-uploads-staging.adoptapet.com/c/f/5/475175353.jpg!
 --
 Example: If AskField is asking for `confirm` field, you should ask the user to confirm the action by providing the details of the action.
 State:
