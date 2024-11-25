@@ -4,6 +4,7 @@ import random
 from uuid import uuid4
 import requests
 import json
+import yaml
 
 from suql.agent import postprocess_suql
 
@@ -11,6 +12,9 @@ from worksheets.agent import Agent
 from worksheets.environment import get_genie_fields_from_ws
 from worksheets.interface_utils import conversation_loop
 from worksheets.knowledge import SUQLKnowledgeBase, SUQLParser, SUQLReActParser
+
+with open("model_config.yaml", "r") as config:
+    model_config = yaml.safe_load(config)
 
 # Define your APIs
 class AdoptionSearch:
@@ -114,7 +118,7 @@ prompt_dir = os.path.join(current_dir, "prompts")
 
 # Define Knowledge Base
 suql_knowledge = SUQLKnowledgeBase(
-    llm_model_name="azure/gpt-4o",
+    llm_model_name="together/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
     tables_with_primary_keys={"dog_breeds": "Name"},
     database_name="dog_breeds",
     embedding_server_address="http://127.0.0.1:8509",
@@ -125,13 +129,13 @@ suql_knowledge = SUQLKnowledgeBase(
     db_port="5432", # database port
     postprocessing_fn=postprocess_suql,
     result_postprocessing_fn=None,
-    api_base="https://ovaloairesourceworksheet.openai.azure.com/",
+    #api_base="https://ovaloairesourceworksheet.openai.azure.com/",
     api_version="2024-08-01-preview",
 )
 
 # Define the SUQL React Parser
 suql_react_parser = SUQLReActParser(
-    llm_model_name="gpt-4o",
+    llm_model_name="together/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
     example_path=os.path.join(current_dir, "examples.txt"),
     instruction_path=os.path.join(current_dir, "instructions.txt"),
     table_schema_path=os.path.join(current_dir, "table_schema.txt"),
@@ -150,21 +154,12 @@ dog_adoption_bot = Agent(
 
 How can I help you today? 
 """,
-    args={},
+    args=model_config,
     api=[adoption_search_client.get_processed_adoption_listings],
     knowledge_base=suql_knowledge,
     knowledge_parser=suql_react_parser,
 ).load_from_gsheet(
     gsheet_id="12fiyfwVRN5IHh_qIZnN7FfonB4lzkBvhUtedXzdur0k", # TODO
-)
-
-# Define the SUQL React Parser
-suql_react_parser = SUQLReActParser(
-    llm_model_name="gpt-4o",
-    example_path=os.path.join(current_dir, "examples.txt"),
-    instruction_path=os.path.join(current_dir, "instructions.txt"),
-    table_schema_path=os.path.join(current_dir, "table_schema.txt"),
-    knowledge=suql_knowledge,
 )
 
 # Run the conversation loop
