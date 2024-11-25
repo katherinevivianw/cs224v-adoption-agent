@@ -106,6 +106,27 @@ class AdoptionSearch:
             processed_adoption_listings.append(pet_info)
 
         return processed_adoption_listings
+    
+    def get_adoption_listing_details(self, pet_id):
+        url = f"{self.base_url}limited_pet_details"
+
+        params = {
+            'v': self.api_version,
+            'key': self.key,
+            'output': self.output_format,
+            'pet_id': pet_id,
+        }
+        headers = {
+            'Accept': 'application/json; charset=UTF8'
+        }
+
+        response = requests.get(url, params=params, headers=headers)
+        if response.status_code == 200:
+            pet = response.json()["pet"]
+            return json.dumps(pet)
+        else:
+            response.raise_for_status()
+
 
 adoption_search_client = AdoptionSearch()
 
