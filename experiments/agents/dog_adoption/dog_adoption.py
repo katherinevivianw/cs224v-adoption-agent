@@ -136,7 +136,7 @@ prompt_dir = os.path.join(current_dir, "prompts")
 
 # Define Knowledge Base
 suql_knowledge = SUQLKnowledgeBase(
-    llm_model_name="together/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+    llm_model_name="together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
     tables_with_primary_keys={"dog_breeds": "Name"},
     database_name="dog_breeds",
     embedding_server_address="http://127.0.0.1:8509",
@@ -153,7 +153,7 @@ suql_knowledge = SUQLKnowledgeBase(
 
 # Define the SUQL React Parser
 suql_react_parser = SUQLReActParser(
-    llm_model_name="together/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+    llm_model_name="together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
     example_path=os.path.join(current_dir, "examples.txt"),
     instruction_path=os.path.join(current_dir, "instructions.txt"),
     table_schema_path=os.path.join(current_dir, "table_schema.txt"),
@@ -177,7 +177,7 @@ How can I help you today?
     knowledge_base=suql_knowledge,
     knowledge_parser=suql_react_parser,
 ).load_from_gsheet(
-    gsheet_id="12fiyfwVRN5IHh_qIZnN7FfonB4lzkBvhUtedXzdur0k", # TODO
+    gsheet_id="12fiyfwVRN5IHh_qIZnN7FfonB4lzkBvhUtedXzdur0k",
 )
 
 # Run the conversation loop
