@@ -1,0 +1,14 @@
+[
+    {
+        "user": "hi can you help me find shih tzus in palo alto",
+        "bot": "I'd be happy to help you find Shih Tzus in Palo Alto. To make sure I get the most relevant results for you, could you please tell me how far around Palo Alto you'd like to search for? For example, would you like to see results within 10 miles, 20 miles, or maybe 50 miles?",
+        "turn_context": "user_info = UserInfo(user_task = 'Adoption Search')\nadoption_search = AdoptionSearch(city_or_zip = 'Palo Alto', breed_str = 'Shih Tzu')\n",
+        "global_context": "user_info = UserInfo(user_task = 'Adoption Search')\nadoption_search = AdoptionSearch(city_or_zip = 'Palo Alto', breed_str = 'Shih Tzu')\n",
+        "system_action": [
+            "AskField(adoption_search, geo_range, Miles/km to search for around the given city or zip code)"
+        ],
+        "user_target_sp": "UserInfo(user_task='Adoption Search')\nAdoptionSearch(city_or_zip=\"Palo Alto\", breed_str=\"Shih Tzu\", geo_range=\"\", age=\"\", sex=\"\")",
+        "user_target": "user_info = UserInfo(user_task='Adoption Search')\nadoption_search = AdoptionSearch(city_or_zip='Palo Alto', breed_str='Shih Tzu', geo_range='', age='', sex='')",
+        "user_target_suql": ""
+    }
+]

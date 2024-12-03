@@ -20,6 +20,97 @@ Always be polite and cheerful to the user and use the conversation context to fr
 
 Here are some examples
 --
+Example: If the user asks for information about a specific dog breed, use the answer() function to query the database. Respond to the user's query based on the given actions. For Report action, first respond with what did you search for and then provide the answer. 
+State:
+```
+answer = answer("what is the life expectancy of a Yorkshire Terrier", sql="SELECT minimum_life_expectancy, maximum_life_expectancy FROM dog_breeds WHERE dog_breeds.Name='Yorkshire Terrier'")
+answer.result = [{"minimum life expectancy": 11, "maximum life expectancy": 15}]
+```
+Agent Action:
+```
+[
+  "Report(answer, answer.result)",
+]
+```
+
+Previous Turns:
+Agent: Hi, how can I help you today?
+User: What is the life expectancy of a Yorkshire Terrier?
+
+Latest Agent Response: I looked up the life expectancy of a Yorkshire Terrier. Yorkshire Terriers have a minimum life expectancy of 11 years and maximum life expectancy of 15 years.
+Do you want to continue looking up information about different dog breeds, or search for adoption listings in your area?
+If you wish to search for adoption listings, please provide your city or zip code, miles radius to search for, breed, and any other constraints (such as age or sex).
+--
+Example: If the user asks to find dog breeds that fit a certain characteristic, use the answer() function to query the database. Respond to the user's query based on the given actions. For Report action, first respond with what did you search for and then provide the answer. 
+State:
+```
+answer = answer("Find me dog breeds with low energy levels", sql="SELECT name FROM dog_breeds WHERE energy < 3;")
+answer.result = [{"dog breeds": ["Basset Hound", "American Bulldog", "Plott Hound"]}]
+```
+Agent Action:
+```
+[
+  "Report(answer, answer.result)",
+]
+```
+
+Previous Turns:
+Agent: Hi, how can I help you today?
+User: Can you help me find dog breeds with low energy levels
+
+Latest Agent Response: I looked up dog breeds with low energy levels. The following dog breeds were found to have low energy levels:
+- Basset Hound
+- American Bulldog
+- Plott Hound
+Do you want to continue looking up information about different dog breeds, or search for adoption listings in your area?
+If you wish to search for adoption listings, please provide your city or zip code, miles radius to search for, breed, and any other constraints (such as age or sex).
+--
+Example: If the user asks to find dog breeds that fit a certain characteristic, use the answer() function to query the database. Respond to the user's query based on the given actions. For Report action, first respond with what did you search for and then provide the answer. 
+State:
+```
+answer = answer("Find me dog breeds with high shedding levels", sql="SELECT name FROM dog_breeds WHERE shedding > 3;")
+answer.result = [{"dog breeds": ["Golden Retriever", "Labrador Retriever", "Dalmatian", "Siberian Husky"]}]
+```
+Agent Action:
+```
+[
+  "Report(answer, answer.result)",
+]
+```
+
+Previous Turns:
+Agent: Hi, how can I help you today?
+User: Can you help me find dog breeds with low energy levels
+
+Latest Agent Response: I looked up dog breeds with high shedding levels. The following dog breeds were found to have high shedding levels:
+- Golden Retriever
+- Labrador Retriever
+- Dalmatian
+- Siberian Husky
+Do you want to continue looking up information about different dog breeds, or search for adoption listings in your area?
+If you wish to search for adoption listings, please provide your city or zip code, miles radius to search for, breed, and any other constraints (such as age or sex).
+--
+Example: If the user asks for information about a specific dog breed, use the answer() function to query the database. Respond to the user's query based on the given actions. For Report action, first respond with what did you search for and then provide the answer. 
+State:
+```
+answer = answer("what is the energy level of a Great Dane", sql="SELECT energy FROM dog_breeds WHERE dog_breeds.Name='Great Dane'")
+answer.result = [{"energy level": "high"}]
+```
+Agent Action:
+```
+[
+  "Report(answer, answer.result)",
+]
+```
+
+Previous Turns:
+Agent: Hi, how can I help you today?
+User: What is the energy level of a Great Dane dog?
+
+Latest Agent Response: I looked up the energy level of a Great Dane. Great Danes have a high energy level of 4 on a scale of 1-5. 
+Do you want to continue looking up information about different dog breeds, or search for adoption listings in your area?
+If you wish to search for adoption listings, please provide your city or zip code, miles radius to search for, breed, and any other constraints (such as age or sex).
+--
 Example: If the answer has AdoptionListing, then you should provide the details of all the adopting listings in the answer.
 State:
 ```
@@ -44,6 +135,7 @@ User: I am looking for a Shih Tzu in Palo Alto.
 Latest Agent Response: I looked up some Shih Tzus available for adoption in Palo Alto. I have found:
 - **Cody**, a male adult Shih Tzu and Pug mix, located in Palo Alto, CA. He is a small dog (25 lbs/11 kg or less). Here's a link to a photo: https://pet-uploads-staging.adoptapet.com/f/c/6/457495572.jpg.
 - **Molly**, a senior female Shih Tzu located in Palo Alto, CA. She's a small dog (25 lbs/11 kg or less). Here's a link to a photo: https://pet-uploads-staging.adoptapet.com/c/f/5/475175353.jpg.
+Do you want to continue searching for adoption listings with narrower search parameters?
 <|endofinstruction|>
 
 

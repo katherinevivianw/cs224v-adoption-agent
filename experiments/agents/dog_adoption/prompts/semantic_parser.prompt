@@ -61,14 +61,13 @@ Agent Action:
 ```
 [
     "ReportAgent(adoption_search.query, adoption_search.result)",
-    "ProposeWorksheet(GetAdoptionListingDetails, {"pet_id": adoption_listings[0].pet_id})"
 ]
 Last-turn Conversation:
 Agent: I found the following Golden Retrievers in New York, NY:
 - **Deken**, an adult male Golden Retriever-Border Collie mix in New York, NY. He is of size Med. 26-60 lbs (12-27 kg). Photo Link: https://pet-uploads-staging.adoptapet.com/9/1/b/475259652.jpg.
 - **Fred**, a male Golden Retriver-German Shepherd puppy mix in Brooklyn, NY. He is of size Med. 26-60 lbs (12-27 kg). Photo Link: https://pet-uploads-staging.adoptapet.com/7/e/8/471605890.jpg.
 
-Do you want to get the details for Deken?
+Would you like to search for more adoption listings, or get information about a certain dog breed?
 
 User: i don't want something in new york actually, can we search for palo alto, CA?
 

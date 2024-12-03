@@ -1,12 +1,21 @@
 - The system should recommend the user a dog breed 'Name' from the dog_breeds table that matches their input preferences
-- If the user wants an older dog, recommend a breed with a higher min_life_expectancy
 - If the user specifies wanting a male or female dog, only look at the table values with the corresponding gender. For example, max_weight_male if they want a male dog and max_weight_female if they want a female dog.
-- If the user wants a bigger, heavier, or taller dog, recommend a breed with a higher min_height and min_weight
-- If the user wants a smaller dog, recommend a breed with a lower max_height and max_weight
-- If the user has kids, wants to start a family, or wants a protective dog, recommend a breed with a good_with_children and good_with_other_dogs score that is greater than 3.5 and a protectiveness score greater than 3
-- If the user has allergies, wants a more hypoallergenic dog, or wants a dog that sheds less, recommend a breed with a shedding and coat_length score less than 2
-- If the user wants a less messy dog, recommend a breed with a drooling score less than 2
-- If the user wants a more playful dog, recommend a breed with a playfulness score greater than 3
-- If the user wants an easily trainable dog, recommend a breed with a trainability score greater than 3 and good_with_other_dogs score that is greater than 3.5
-- If the user wants a low energy dog, recommend a breed with an energy score less than 3 and good_with_other_dogs score that is greater than 3.5
-- If the user wants a quieter dog, recommend a breed with a barking score less than 3
+
+To understand and categorize user preferences in accordance with the numerical data in the dog_breeds database, adhere to the following categorization scheme. 
+
+- A numerical score less than 3 is considered LOW
+- A numerical score of 3 is considered AVERAGE
+- A numerical score greater than 3 is considered HIGH
+
+You must follow this categorization and apply them to the following instructions:. If the user does not specify a required category, assume their preference is AVERAGE.
+
+- If the user wants an older dog, recommend a breed with HIGH min_life_expectancy
+- If the user wants a bigger, heavier, or taller dog, recommend a breed with a HIGH min_height and min_weight
+- If the user wants a smaller dog, recommend a breed with a LOW max_height and max_weight
+- If the user has kids, wants to start a family, or wants a protective dog, recommend a breed with a HIGH good_with_children, score good_with_other_dogs score, and protectiveness score
+- If the user has allergies, wants a more hypoallergenic dog, or wants a dog that sheds less, recommend a breed with a LOW shedding and coat_length score 
+- If the user wants a less messy dog, recommend a breed with a LOW drooling score 
+- If the user wants a more playful dog, recommend a breed with a HIGH playfulness score 
+- If the user wants an easily trainable dog, recommend a breed with a HIGH trainability score and good_with_other_dogs score 
+- If the user wants a low energy dog, recommend a breed with an LOW energy score and a HIGH good_with_other_dogs score 
+- If the user wants a quieter dog, recommend a breed with a LOW barking score 

@@ -138,7 +138,7 @@ prompt_dir = os.path.join(current_dir, "prompts")
 # Define Knowledge Base
 suql_knowledge = SUQLKnowledgeBase(
     llm_model_name="together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
-    tables_with_primary_keys={"dog_breeds": "Name"},
+    tables_with_primary_keys={"dog_breeds": "name"},
     database_name="dog_breeds",
     embedding_server_address="http://127.0.0.1:8509",
     source_file_mapping={
@@ -164,15 +164,15 @@ suql_react_parser = SUQLReActParser(
 # Define the agent
 dog_adoption_bot = Agent(
     botname="Dog Adoption Assistant",
-    description="You are a dog adoptionassistant. You can help future dog owners with deciding a dog breed suited to their needs and finding nearby adoption postings",
+    description="You are a dog adoption assistant. You can help future dog owners with deciding a dog breed suited to their needs and finding nearby adoption postings",
     prompt_dir=prompt_dir,
     starting_prompt="""Hello! I'm the Dog Adoption Assistant. I can help you with :
-- Finding a suitable dog breed: just say find me dog breeds
-- Searching for dog adoption listings nearby. 
-- Asking me any question related to dog breeds and adopting a new dog.
+    - Finding a suitable dog breed with your preferred characteristics (e.g. low shedding)
+    - Searching for dog adoption listings nearby. 
+    - Asking me any question related to a specific dog breed.
 
-How can I help you today? 
-""",
+    How can I help you today? 
+    """,
     args={"model": model_config},
     api=[adoption_search_client.get_processed_adoption_listings],
     knowledge_base=suql_knowledge,
@@ -182,4 +182,5 @@ How can I help you today?
 )
 
 # Run the conversation loop
-asyncio.run(conversation_loop(dog_adoption_bot, "dog_adoption_bot.json"))
+if __name__ == "__main__":
+    asyncio.run(conversation_loop(dog_adoption_bot, "dog_adoption_bot.json"))
