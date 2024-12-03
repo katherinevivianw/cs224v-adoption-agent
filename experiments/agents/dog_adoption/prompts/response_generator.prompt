@@ -20,26 +20,7 @@ Always be polite and cheerful to the user and use the conversation context to fr
 
 Here are some examples
 --
-Example: Respond to the user's query based on the given actions. For Report action, first respond with what did you search for and then provide the answer. 
-State:
-```
-answer = answer("what is the energy level of a Great Dane", sql="SELECT energy FROM dog_breeds WHERE dog_breeds.Name='Great Dane'")
-answer.result = [{"energy level": "high"}]
-```
-Agent Action:
-```
-[
-  "Report(answer, answer.result)",
-]
-```
-
-Previous Turns:
-Agent: Hi, how can I help you today?
-User: What is the energy level of a Great Dane dog?
-
-Latest Agent Response: I looked up the energy level of a Great Dane. Great Danes have a [INSERT ENERGY LEVEL] energy level.
---
-Example: If the answer has AdoptionListing, then you should provide the details of all the adopting listings in the answer. If there are multiple actions, perform all the actions.
+Example: If the answer has AdoptionListing, then you should provide the details of all the adopting listings in the answer.
 State:
 ```
 adoption_search = AdoptionSearch(city_or_zip="Palo Alto, CA", breed_str="Shih Tzu", geo_range="50")
@@ -52,9 +33,7 @@ adoption_search.result = [adoption_listing[0], adoption_listing[1]]
 Agent Action:
 ```
 [
-  "Report(adoption_search.query, adoption_search.result)",
-  'ProposeWorksheet(GetAdoptionListingDetails, {"adoption_listing": adoption_listing[0]})',
-  'ProposeWorksheet(GetAdoptionListingDetails, {"adoption_listing": adoption_listing[1]})',
+  "Report(adoption_search.query, adoption_search.result)"
 ]
 ```
 
@@ -63,32 +42,8 @@ Agent: Hello! I'm DogAdoptionBot. I'm here to help you find adoption listings fo
 User: I am looking for a Shih Tzu in Palo Alto.
 
 Latest Agent Response: I looked up some Shih Tzus available for adoption in Palo Alto. I have found:
-- **Cody**, a male adult Shih Tzu and Pug mix, located in Palo Alto, CA. He is a small dog (25 lbs/11 kg or less). Here's a link to a photo: https://pet-uploads-staging.adoptapet.com/f/c/6/457495572.jpg!
-- **Molly**, a senior female Shih Tzu located in Palo Alto, CA. She's a small dog (25 lbs/11 kg or less). Here's a link to a photo: https://pet-uploads-staging.adoptapet.com/c/f/5/475175353.jpg!
---
-Example: If AskField is asking for `confirm` field, you should ask the user to confirm the action by providing the details of the action.
-State:
-```
-user_info = UserInfo(user_task = 'Get Adoption Listing Details')
-get_details = GetAdoptionListingDetails(pet_id="27390669")
-adoption_search = AdoptionSearch(city_or_zip="Palo Alto, CA", breed_str="Shih Tzu", geo_range="50")
-adoption_listing = [AdoptionListing(pet_id="27390669", pet_name="Cody", age="adult", sex="m", size="Small 25 lbs (11 kg) or less", primary_breed="Shih Tzu", secondary_breed="Pug", location="Palo Alto, CA", large_results_photo_url="https://pet-uploads-staging.adoptapet.com/f/c/6/457495572.jpg")]
-adoption_search.result = [adoption_listing[0]]
-
-```
-Agent Action:
-```
-[
-  "AskField(get_details, confirm, Confirm that the user wants to get more details on the adoption listing with the currently set parameters.)"
-]
-```
-
-Previous Turns:
-Agent: Is there a dog from these given adoption listings that you'd like to see more details about?
-User: I want to learn more about Cody, the male adult Shih Tzu and Pug mix
-
-Latest Agent Response: Awesome, this sounds great! Can you confirm that you want to learn more about Cody, the male adult Shih Tzu and Pug mix?
---
+- **Cody**, a male adult Shih Tzu and Pug mix, located in Palo Alto, CA. He is a small dog (25 lbs/11 kg or less). Here's a link to a photo: https://pet-uploads-staging.adoptapet.com/f/c/6/457495572.jpg.
+- **Molly**, a senior female Shih Tzu located in Palo Alto, CA. She's a small dog (25 lbs/11 kg or less). Here's a link to a photo: https://pet-uploads-staging.adoptapet.com/c/f/5/475175353.jpg.
 <|endofinstruction|>
 
 

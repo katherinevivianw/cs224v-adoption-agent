@@ -21,6 +21,7 @@ You will be given:
 
 Follow these guidelines:
 - Set the `user_task` field of the `UserInfo` API to 'Adoption Search' when the user wants to search for a shelter.
+- Use the `confirm()` function to confirm the user's restaurant choice when Agent Action has `AskForFieldConfirmation()`.
 - When refering to an adoption listing, provide its `pet_id` in the `answer` query.
 - You should update fields by using `api_name.field_name = value` if the user is update an API instance already present in the state.
 - If the user refuses to confirm, set the field to `False`.
@@ -46,10 +47,13 @@ User Target:
 UserInfo(user_task='Adoption Search')
 AdoptionSearch(city_or_zip="92602", breed_str="Maltese", geo_range="100", sex="f")
 --
-Example: Whenever searching for adoptions, make sure to set user_task to 'Adoption Search'.
+Example: Whenever searching for adoptions, make sure to set user_task to 'Adoption Search'. Update a field, such as city_or_zip, if the user changes its value.
 State:
 ```
-adoption_listings = [AdoptionListing(pet_id = "28112543", pet_name = "Deken", age = "adult", sex = "m", size = "Med. 26-60 lbs (12-27 kg)", primary_breed = "Golden Retriever", location = "New York, NY")]
+adoption_listings = [
+    AdoptionListing(pet_id='28112543', pet_name='Deken', age='adult', sex='m', size='Med. 26-60 lbs (12-27 kg)', primary_breed='Golden Retriever', secondary_breed='Border Collie', location='New York, NY', large_results_photo_url='https://pet-uploads-staging.adoptapet.com/9/1/b/475259652.jpg'), 
+    AdoptionListing(pet_id='27973930', pet_name='Fred', age='puppy', sex='m', size='Med. 26-60 lbs (12-27 kg)', primary_breed='Golden Retriever', secondary_breed='German Shepherd Dog', location='Brooklyn, NY', large_results_photo_url='https://pet-uploads-staging.adoptapet.com/7/e/8/471605890.jpg')
+]
 adoption_search = AdoptionSearch(city_or_zip="New York, NY", breed_str="Golden Retriever", geo_range="100", sex="m", age="adult")
 adoption_search.result = [adoption_listings[0]]
 ```
@@ -57,8 +61,22 @@ Agent Action:
 ```
 [
     "ReportAgent(adoption_search.query, adoption_search.result)",
-    "ProposeWorksheet(AdoptionSearch, {"adoption_listings": adoption_listings[0]})"
+    "ProposeWorksheet(GetAdoptionListingDetails, {"pet_id": adoption_listings[0].pet_id})"
 ]
+Last-turn Conversation:
+Agent: I found the following Golden Retrievers in New York, NY:
+- **Deken**, an adult male Golden Retriever-Border Collie mix in New York, NY. He is of size Med. 26-60 lbs (12-27 kg). Photo Link: https://pet-uploads-staging.adoptapet.com/9/1/b/475259652.jpg.
+- **Fred**, a male Golden Retriver-German Shepherd puppy mix in Brooklyn, NY. He is of size Med. 26-60 lbs (12-27 kg). Photo Link: https://pet-uploads-staging.adoptapet.com/7/e/8/471605890.jpg.
+
+Do you want to get the details for Deken?
+
+User: i don't want something in new york actually, can we search for palo alto, CA?
+
+User Target: 
+```
+UserInfo(user_task='Adoption Search')
+adoption_search.city_or_zip = "Palo Alto, CA"
+```
 --
 <|endofinstruction|>
 

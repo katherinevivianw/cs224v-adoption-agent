@@ -80,7 +80,7 @@ class AdoptionSearch:
 
         response = requests.get(url, params=params, headers=headers)
         if response.status_code == 200:
-            return response.json()["pets"]
+            return response.json().get("pets")
         else:
             response.raise_for_status()
     
@@ -90,6 +90,7 @@ class AdoptionSearch:
         """
         processed_adoption_listings = []
         dogs = self.get_adoption_listings(city_or_zip, breed_str, geo_range, sex, age)
+        print(dogs)
         
         for dog in dogs:
             pet_info = {
@@ -153,7 +154,7 @@ suql_knowledge = SUQLKnowledgeBase(
 
 # Define the SUQL React Parser
 suql_react_parser = SUQLReActParser(
-    llm_model_name="together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+    llm_model_name="llama-3.1-70b-instruct",
     example_path=os.path.join(current_dir, "examples.txt"),
     instruction_path=os.path.join(current_dir, "instructions.txt"),
     table_schema_path=os.path.join(current_dir, "table_schema.txt"),
@@ -172,7 +173,7 @@ dog_adoption_bot = Agent(
 
 How can I help you today? 
 """,
-    args=model_config,
+    args={"model": model_config},
     api=[adoption_search_client.get_processed_adoption_listings],
     knowledge_base=suql_knowledge,
     knowledge_parser=suql_react_parser,
