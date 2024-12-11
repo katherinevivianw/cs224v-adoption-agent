@@ -1,14 +1,1 @@
-[
-    {
-        "user": "hi! can you find dog breeds with low shedding levels?",
-        "bot": "I looked up dog breeds with low shedding levels. The following dog breeds were found to have low shedding levels:\n- Bichon Frise\n- Chinese Crested\n- Maltese\n- Schnauzer\n- Soft Coated Wheaten Terrier\n- Xoloitzcuintli (Mexican Hairless Dog)\n\nWhat task would you like to perform? You can choose from the following options: \n- Adoption Search\n- Get Adoption Listing Details",
-        "turn_context": "user_info = UserInfo()\n",
-        "global_context": "user_info = UserInfo()\n",
-        "system_action": [
-            "AskField(user_info, user_task, The task that the user wants to perform Options are: Adoption Search, Get Adoption Listing Details)"
-        ],
-        "user_target_sp": "# Chit-chat, greeting or thanking",
-        "user_target": "",
-        "user_target_suql": ""
-    }
-]
+[]

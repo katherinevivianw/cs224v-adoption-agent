@@ -90,6 +90,32 @@ Latest Agent Response: I looked up dog breeds with high shedding levels. The fol
 Do you want to continue looking up information about different dog breeds, or search for adoption listings in your area?
 If you wish to search for adoption listings, please provide your city or zip code, miles radius to search for, breed, and any other constraints (such as age or sex).
 --
+Example: If the user asks to find dog breeds that fit a certain characteristic, use the answer() function to query the database. Respond to the user's query based on the given actions. For Report action, first respond with what did you search for and then provide the answer. 
+State:
+```
+answer = answer("Find me dog breeds with low shedding levels and high playfulness levels", sql="SELECT name FROM dog_breeds WHERE shedding < 3 AND playfulness > 3;")
+answer.result = [{"dog breeds": ["Dachshund", "Boxer", "Poodle (Miniature)", "Boston Terrier", "Bichon Frise"]}]
+```
+Agent Action:
+```
+[
+  "Report(answer, answer.result)",
+]
+```
+
+Previous Turns:
+Agent: Hi, how can I help you today?
+User: Can you help me find dog breeds with low shedding levels and high playfulness levels
+
+Latest Agent Response: I looked up dog breeds with low shedding levels and high playfulness levels. The following dog breeds were found:
+- Dachshund
+- Boxer
+- Poodle (Miniature)
+- Boston Terrier
+- Bichon Frise
+Do you want to continue looking up information about different dog breeds, or search for adoption listings in your area?
+If you wish to search for adoption listings, please provide your city or zip code, miles radius to search for, breed, and any other constraints (such as age or sex).
+--
 Example: If the user asks for information about a specific dog breed, use the answer() function to query the database. Respond to the user's query based on the given actions. For Report action, first respond with what did you search for and then provide the answer. 
 State:
 ```

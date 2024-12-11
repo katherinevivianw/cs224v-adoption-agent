@@ -137,15 +137,15 @@ prompt_dir = os.path.join(current_dir, "prompts")
 
 # Define Knowledge Base
 suql_knowledge = SUQLKnowledgeBase(
-    llm_model_name="together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+    llm_model_name="together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo", # openai/gpt4-4o-mini (sql makes multiple calls fails w together)
     tables_with_primary_keys={"dog_breeds": "name"},
-    database_name="dog_breeds",
+    database_name="postgres",
     embedding_server_address="http://127.0.0.1:8509",
     source_file_mapping={
         "dog_adoption_general_info.txt": os.path.join(current_dir, "dog_adoption_general_info.txt")
     },
     db_host="127.0.0.1", # database host
-    db_port="5432", # database port
+    db_port="5433", # database port
     postprocessing_fn=postprocess_suql,
     result_postprocessing_fn=None,
     #api_base="https://ovaloairesourceworksheet.openai.azure.com/",

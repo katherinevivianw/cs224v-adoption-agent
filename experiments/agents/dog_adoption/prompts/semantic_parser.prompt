@@ -77,6 +77,36 @@ UserInfo(user_task='Adoption Search')
 adoption_search.city_or_zip = "Palo Alto, CA"
 ```
 --
+Example: Always do what the user asks for first, irrespective of actions's action. If the asks for pricing information, use the `answer(query: str)` API to get the information.
+State:
+```
+answer = answer(query="Find me dog breeds with low drooling and low shedding")
+dog_breeds = ["Dachshund", "Poodle (Miniature)", "Shih Tzu", "Pomeranian"]
+answer.result = [dog_breeds[0]]
+```
+Agent Action:
+```
+[
+    "ReportAgent(answer.query, answer.result)",
+    "ProposeWorksheet(AdoptionSearch, {"breed_str": dog_breeds[0]})"
+]
+```
+
+Last-turn Conversation:
+Agent: I have found the following dog breeds with low drooling and low shedding levels:
+- Dachshund
+- Poodle (Miniature)
+- Shih Tzu
+- Pomeranian
+Would you like to search for adoption listings for one of these breeds? If so, please provide the breed you'd like to search for, your city or zip code, the number of miles you'd like to search for, and any additional constraints (such as sex or age).
+User: I'd like to search for Pomeranians. My city is Palo Alto, CA, and I want to search within a 50 mile radius.
+
+User Target: 
+```
+answer("Find me dog breeds with low drooling and low shedding")
+AdoptionSearch(breed_str="Pomeranian", city="Palo Alto, CA", geo_range="50")
+```
+--
 <|endofinstruction|>
 
 <|startofinput|>
