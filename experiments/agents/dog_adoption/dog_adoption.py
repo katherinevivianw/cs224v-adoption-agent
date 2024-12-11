@@ -137,7 +137,7 @@ prompt_dir = os.path.join(current_dir, "prompts")
 
 # Define Knowledge Base
 suql_knowledge = SUQLKnowledgeBase(
-    llm_model_name="together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo", # openai/gpt4-4o-mini (sql makes multiple calls fails w together)
+    llm_model_name="together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo", 
     tables_with_primary_keys={"dog_breeds": "name"},
     database_name="postgres",
     embedding_server_address="http://127.0.0.1:8509",
