@@ -1,3 +1,37 @@
+This repository is Katherine Wong and Priyanka Gupta's final project for CS 224V: Conversational Virtual Assistants with Deep Learning. The Dog Adoption Assistant helps users answer any questions about various dog breeds, find dog breeds that suit their needs, and search for dog adoption listings in the user's area. 
+
+In order to run the agent, follow the provided steps:
+1) Clone the repository on your device
+2) Run the following commands:
+```python
+conda deactivate
+source .venv/bin/activate
+uv venv
+uv add requests
+python3 experiments/agents/dog_adoption/dog_adoption.py
+```
+To run the frontend, run the following commands instead of the last line of the above block:
+```python
+cd experiments/agents/dog_adoption/frontend
+chainlit run app_dog_adoption.py --port 8800 
+```
+Running this command should launch a window in your browser to a locally-hosted frontend UI, where you can interact with the agent.
+
+When a user inputs a query related to fetching information about a dog breed (i.e. "What is the energy level of a chihuahua?" or "Find me dog breeds with low shedding levels"), the agent will create a SQL query and run the SQL query on the database; finally, once it gets the given information, it will report it back to the user. In order for this to work properly, you must also host the database via PostgreSQL on your own device. The dataset we used is linked at the bottom of this section.
+
+When a user inputs a query related to searching for dog adoption listings, the agent will call the AdoptAPet API and report the results back to the user. Behind the scenes, we've written additional functions that call the AdoptAPet API using the Python requests module and process its JSON outputs. The adoption search task takes in the following parameters: city_or_zip (US zip code or CA postal code (with space), or "City, ST" to search for adoption listings in), geo_range (miles/km to search for around the given city or zip code), breed (the user's desired breed that they want to search for), age (the age category of the dog in the adoption listing — either "puppy", "young", "adult", or "senior"), and sex (the sex/gender of the dog in the adoption listing – either "m" or "f"). The parameters city_or_zip and geo_range are required.
+
+You must also need to set the LLM key as an environment variable. Directions on how to do so are at the bottom of this ReadMe.
+
+Important Links:
+- [Genie Worksheet Google Sheet](https://docs.google.com/spreadsheets/d/12fiyfwVRN5IHh_qIZnN7FfonB4lzkBvhUtedXzdur0k/edit?usp=sharing)
+- [Demo Video (Longer)](https://drive.google.com/file/d/13TRpZPiiDxfP10KBwlop0IVgNkj_L96x/view?usp=sharing)
+- [Demo Video (Short <1 Minute)](https://drive.google.com/file/d/1sjvQ0_ICyAL96XbevSpK3NdLQM_zSxXK/view?usp=drive_link)
+- [Kaggle Dataset](https://www.kaggle.com/datasets/warcoder/dog-breeds-details)
+- [AdoptAPet API Documentation](https://partner-apis.adoptapet.com/)
+
+***
+
 <p align="center">
     <h1 align="center">
         <img src="assets/genie_worksheets_circle.png" width=100px>
